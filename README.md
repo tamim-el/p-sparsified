@@ -7,7 +7,6 @@ To reproduce the plots, run run_synthetic_All.py.
 More Details:
 
 Data: contains
-- The data set otoliths (Moen et al., 2018, Ordonez et al., 2020)
 - The data set rf1 (Spyromitros-Xioufis et al., 2016)
 - The data set rf2 (Spyromitros-Xioufis et al., 2016)
 - The data set scm1d (Spyromitros-Xioufis et al., 2016)
