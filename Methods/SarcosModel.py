@@ -30,37 +30,37 @@ class SarcosModel:
         self.T_tr = T_tr.copy()
         self.Y_tr_full = Y_tr_full.copy()
         self.n_tr = self.X_tr.shape[0]
-        self.p = self.Probs.shape[0]
+        self.p = self.T_tr.shape[1]
+
+        if self.M is None:
+            self.M = np.eye(self.p)
 
         # Without sketching
         if self.Sketch is None:
 
-            if self.M is None:
-                self.M = np.eye(self.p)
-
-            self.Omega, self.objectives, self.train_loss, self.val_loss = sgd(X_tr, Y_tr, T_tr, Y_tr_full,
-                                                                              X_val, Y_val, T_val, Y_val_full,
-                                                                              self.M, self.kernel, self.L,
-                                                                              self.optim, self.lr,
-                                                                              self.max_iter, self.tol,
-                                                                              self.monitoring_step,
-                                                                              self.early_stopping,
-                                                                              self.n_iter_no_change,
-                                                                              self.verbose)
+            self.Omega, self.objectives, self.train_loss, self.val_loss, self.train_score, self.val_score = sgd(X_tr, Y_tr, T_tr, Y_tr_full,
+                                                                                                                X_val, Y_val, T_val, Y_val_full,
+                                                                                                                self.kernel, self.M, self.L,
+                                                                                                                self.optim, self.lr,
+                                                                                                                self.max_iter, self.tol,
+                                                                                                                self.monitoring_step,
+                                                                                                                self.early_stopping,
+                                                                                                                self.n_iter_no_change,
+                                                                                                                self.verbose)
 
         # With sketching
         else:
 
             S = self.Sketch
-            self.Omega, self.objectives, self.train_loss, self.val_loss = sgd_sketch(X_tr, Y_tr, T_tr, Y_tr_full,
-                                                                                     X_val, Y_val, T_val, Y_val_full,
-                                                                                     self.M, self.kernel, S, self.L,
-                                                                                     self.optim, self.lr,
-                                                                                     self.max_iter, self.tol,
-                                                                                     self.monitoring_step,
-                                                                                     self.early_stopping,
-                                                                                     self.n_iter_no_change,
-                                                                                     self.verbose)
+            self.Omega, self.objectives, self.train_loss, self.val_loss, self.train_score, self.val_score = sgd_sketch(X_tr, Y_tr, T_tr, Y_tr_full,
+                                                                                                                       X_val, Y_val, T_val, Y_val_full,
+                                                                                                                       self.kernel, self.M, S, self.L,
+                                                                                                                       self.optim, self.lr,
+                                                                                                                       self.max_iter, self.tol,
+                                                                                                                       self.monitoring_step,
+                                                                                                                       self.early_stopping,
+                                                                                                                       self.n_iter_no_change,
+                                                                                                                       self.verbose)
 
 
     def estimate_output_embedding(self, X_te):
@@ -79,6 +79,10 @@ class SarcosModel:
     def predict(self, X_te):
         Y_pred = self.estimate_output_embedding(X_te)
         return Y_pred
+
+
+def nMSE(Y_true, Y_pred):
+    return np.mean(np.linalg.norm(Y_pred - Y_true, axis=1) ** 2) / np.mean(np.linalg.norm(np.zeros_like(Y_true) - Y_true, axis=1) ** 2)
 
 
 def sgd_sketch(X_tr, Y_tr, T_tr, Y_tr_full,
@@ -148,7 +152,7 @@ def sgd_sketch(X_tr, Y_tr, T_tr, Y_tr_full,
                 pred_tr = KS.dot(Omega).dot(M)
                 predy_tr = (Y_tr - np.diag(pred_tr.dot(T_tr.T))) ** 2
                 losses = 0.5 * np.sum(predy_tr)
-                train_loss.append(np.mean(losses))
+                train_loss.append(losses)
                 objectives.append(train_loss[-1] + (L / 2) * np.trace(SKST.dot(Omega).dot(M).dot(Omega.T)))
 
                 # Computation of validation loss
@@ -156,13 +160,13 @@ def sgd_sketch(X_tr, Y_tr, T_tr, Y_tr_full,
                     pred_val = KvalS.dot(Omega).dot(M)
                     predy_val = (Y_val - np.diag(pred_val.dot(T_val.T))) ** 2
                     losses = 0.5 * np.sum(predy_val)
-                    val_loss.append(np.mean(losses))
+                    val_loss.append(losses)
 
                 # Computation of train and validation score
-                score_tr = mean_squared_error(Y_tr_full, pred_tr) / mean_squared_error(Y_tr_full, np.zeros_like(Y_tr_full))
+                score_tr = nMSE(Y_tr_full, pred_tr)
                 train_score.append(score_tr)
                 if early_stopping:
-                    score_val = mean_squared_error(Y_val_full, pred_val) / mean_squared_error(Y_val_full, np.zeros_like(Y_val))
+                    score_val = nMSE(Y_val_full, pred_val)
                     val_score.append(score_val)
 
                 # Stopping criterion and early stopping
@@ -199,7 +203,7 @@ def sgd_sketch(X_tr, Y_tr, T_tr, Y_tr_full,
         if stop:
             break
 
-    return Omega, objectives, train_loss, val_loss
+    return Omega, objectives, train_loss, val_loss, train_score, val_score
 
 
 def sgd(X_tr, Y_tr, T_tr, Y_tr_full,
@@ -278,10 +282,10 @@ def sgd(X_tr, Y_tr, T_tr, Y_tr_full,
                     val_loss.append(np.mean(losses))
 
                 # Computation of train and validation score
-                score_tr = mean_squared_error(Y_tr_full, pred_tr) / mean_squared_error(Y_tr_full, np.zeros_like(Y_tr_full))
+                score_tr = nMSE(Y_tr_full, pred_tr)
                 train_score.append(score_tr)
                 if early_stopping:
-                    score_val = mean_squared_error(Y_val_full, pred_val) / mean_squared_error(Y_val_full, np.zeros_like(Y_val))
+                    score_val = nMSE(Y_val_full, pred_val)
                     val_score.append(score_val)
 
                 # Stopping criterion and early stopping
@@ -321,4 +325,4 @@ def sgd(X_tr, Y_tr, T_tr, Y_tr_full,
         if stop:
             break
 
-    return Omega, objectives, train_loss, val_loss
+    return Omega, objectives, train_loss, val_loss, train_score, val_score
