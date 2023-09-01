@@ -1,0 +1,8 @@
+numpy
+scikit-learn
+scipy
+pandas
+matplotlib
+liac-arff
+scikit-multilearn
+seaborn
