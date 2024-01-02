@@ -62,3 +62,7 @@ RUN python files:
   
 To ignore warnings outputs, please use -W option. Example:
 python -W ignore run_rf1.py
+
+## Reference
+
+El Ahmad, T., Laforgue, P., and d’Alché Buc, F. (2023). Fast kernel methods for generic lipschitz losses via p-sparsified sketches. Transactions on Machine Learning Research.
