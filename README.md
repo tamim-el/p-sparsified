@@ -75,5 +75,4 @@ If you use this code, please cite the corresponding work:
   issn={2835-8856},
   year={2023},
   url={https://openreview.net/forum?id=ry2qgRqTOw},
-  note={}
 }
