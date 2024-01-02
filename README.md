@@ -1,4 +1,4 @@
-# p-Sparsified-Sketches-for-Fast-Multiple-Output-Kernel-Methods
+# Fast Kernel Methods for Generic Lipschitz Losses via p-Sparsified Sketches
 
 ## Summary
 
