@@ -63,6 +63,17 @@ RUN python files:
 To ignore warnings outputs, please use -W option. Example:
 python -W ignore run_rf1.py
 
-## Reference
+## Cite
 
-El Ahmad, T., Laforgue, P., and d’Alché Buc, F. (2023). Fast kernel methods for generic lipschitz losses via p-sparsified sketches. Transactions on Machine Learning Research.
+If you use this code, please cite the corresponding work:
+
+```
+@article{elahmad2023fast,
+  title={Fast Kernel Methods for Generic Lipschitz Losses via $p$-Sparsified Sketches},
+  author={Tamim {El Ahmad} and Pierre Laforgue and Florence d'Alch{\'e}-Buc},
+  journal={Transactions on Machine Learning Research},
+  issn={2835-8856},
+  year={2023},
+  url={https://openreview.net/forum?id=ry2qgRqTOw},
+  note={}
+}
