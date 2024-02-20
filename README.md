@@ -28,7 +28,7 @@ Data: contains
 - The data set scm20d (Spyromitros-Xioufis et al., 2016)
 
 Methods: contains 7 files:
-- Sketch.py contains a Python class to implement various types of sketching
+- Sketch.py contains Python classes to implement various types of sketching
 - RFF.py contains a Python class to implement Gaussian Random Fourier Features
 - ScalarModel.py contains a Python class to implement non-sketched and sketched kernel learning in the single output setting
 - ScalarModelRFF.py contains a Python class to implement kernel learning using RFF in the single output setting
