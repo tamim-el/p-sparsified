@@ -77,3 +77,6 @@ If you use this code, please cite the corresponding work:
   url={https://openreview.net/forum?id=ry2qgRqTOw},
 }
 ```
+
+
+![Poster](https://github.com/tamim-el/p-sparsified/blob/main/Misc/Poster.png?raw=true)
