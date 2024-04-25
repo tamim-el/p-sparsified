@@ -67,7 +67,7 @@ python -W ignore run_rf1.py
 
 If you use this code, please cite the corresponding work:
 
-```
+```bibtex
 @article{elahmad2023fast,
   title={Fast Kernel Methods for Generic Lipschitz Losses via $p$-Sparsified Sketches},
   author={Tamim {El Ahmad} and Pierre Laforgue and Florence d'Alch{\'e}-Buc},
@@ -76,3 +76,4 @@ If you use this code, please cite the corresponding work:
   year={2023},
   url={https://openreview.net/forum?id=ry2qgRqTOw},
 }
+```
