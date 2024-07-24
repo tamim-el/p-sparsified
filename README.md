@@ -63,6 +63,10 @@ RUN python files:
 To ignore warnings outputs, please use -W option. Example:
 python -W ignore run_rf1.py
 
+## Acknowledgments
+
+This work was supported by the Télécom Paris research chair on Data Science and Artificial Intelligence for Digitalized Industry and Services (DSAIDIS) and by the French National Research Agency (ANR) through the ANR-18-CE23-0014 APi project.
+
 ## Cite
 
 If you use this code, please cite the corresponding work:
